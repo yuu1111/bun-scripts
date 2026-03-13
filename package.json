@@ -1,28 +1,17 @@
 {
     "name": "bun-scripts",
     "displayName": "Bun Scripts",
-    "description": "",
     "repository": {
         "type": "git",
-        "url": "https://github.com/w0o0o/bun-scripts.git"
+        "url": "https://github.com/yuu1111/bun-scripts.git"
     },
-    "publisher": "w0o0o",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "engines": {
         "vscode": "^1.82.0"
     },
-    "categories": [
-        "Other"
-    ],
-    "activationEvents": [],
+    "icon": "bun.png",
     "main": "./dist/extension.js",
     "contributes": {
-        "commands": [
-            {
-                "command": "bun-scripts.helloWorld",
-                "title": "Hello World"
-            }
-        ],
         "views": {
             "explorer": [
                 {
@@ -42,11 +31,11 @@
     },
     "devDependencies": {
         "@biomejs/biome": "^2.4.6",
-        "@types/node": "20.2.5",
+        "@types/node": "25.5.0",
         "@types/vscode": "^1.82.0",
         "@yuu1111/biome-config": "^1.0.3",
         "@yuu1111/tsconfig": "^1.0.2",
-        "esbuild": "^0.25.0",
+        "esbuild": "^0.27.4",
         "typescript": "^5.1.3"
     }
 }
