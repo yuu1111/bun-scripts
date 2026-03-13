@@ -20,5 +20,10 @@ export function activate(context: vscode.ExtensionContext): void {
 		},
 	);
 
-	context.subscriptions.push(runBunScript);
+	const watcher = vscode.workspace.createFileSystemWatcher("**/package.json");
+	watcher.onDidChange(() => bunScriptsTreeDataProvider.refresh());
+	watcher.onDidCreate(() => bunScriptsTreeDataProvider.refresh());
+	watcher.onDidDelete(() => bunScriptsTreeDataProvider.refresh());
+
+	context.subscriptions.push(runBunScript, watcher);
 }

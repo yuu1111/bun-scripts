@@ -1,3 +1,5 @@
+import * as fs from "node:fs";
+import * as path from "node:path";
 import * as vscode from "vscode";
 
 class BunScriptTreeItem extends vscode.TreeItem {
@@ -33,8 +35,14 @@ export class BunScriptsTreeDataProvider
 			return [];
 		}
 
-		const packageJson = require(`${rootPath}/package.json`);
-		const scripts: Record<string, string> | undefined = packageJson.scripts;
+		const pkgPath = path.join(rootPath, "package.json");
+		let scripts: Record<string, string> | undefined;
+		try {
+			const raw = fs.readFileSync(pkgPath, "utf-8");
+			scripts = JSON.parse(raw).scripts;
+		} catch {
+			return [];
+		}
 		if (!scripts) {
 			return [];
 		}
