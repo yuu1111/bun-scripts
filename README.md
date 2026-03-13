@@ -1,16 +1,17 @@
-# Bun Scripts - Visual Studio Code Extension
+# Bun Scripts - Visual Studio Code 拡張機能
 
-## Overview
+> **Fork元**: [w0o0o/bun-scripts](https://github.com/w0o0o/bun-scripts)
 
-**Bun Scripts** is a Visual Studio Code extension designed to enhance your development workflow when using the BunJS package manager. It allows you to easily view and run scripts defined in your `package.json` file using BunJS (Just like the NPM Scripts tab)
+## 概要
 
-## Usage
+**Bun Scripts** は、BunJS パッケージマネージャーを使用する開発ワークフローを強化するための Visual Studio Code 拡張機能です。`package.json` に定義されたスクリプトを BunJS で簡単に表示・実行できます(NPM Scripts タブと同様)。
 
-1. Open a project directory that contains a `package.json` file.
-2. A "BUN SCRIPTS" tab will be available in the explorer panel.
-3. Click on any of the scripts to run them in a terminal
+## 使い方
 
+1. `package.json` を含むプロジェクトディレクトリを開きます。
+2. エクスプローラーパネルに「BUN SCRIPTS」タブが表示されます。
+3. スクリプトをクリックするとターミナルで実行されます。
 
 ---
 
-Happy coding with BunJS and enjoy using the Bun Scripts extension for Visual Studio Code!
+BunJS と Bun Scripts 拡張機能で快適な開発を!
