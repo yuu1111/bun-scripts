@@ -25,5 +25,11 @@ export function activate(context: vscode.ExtensionContext): void {
 	watcher.onDidCreate(() => bunScriptsTreeDataProvider.refresh());
 	watcher.onDidDelete(() => bunScriptsTreeDataProvider.refresh());
 
-	context.subscriptions.push(runBunScript, watcher);
+	const onSave = vscode.workspace.onDidSaveTextDocument((doc) => {
+		if (doc.fileName.endsWith("package.json")) {
+			bunScriptsTreeDataProvider.refresh();
+		}
+	});
+
+	context.subscriptions.push(runBunScript, watcher, onSave);
 }

@@ -25,8 +25,7 @@
             "explorer": [
                 {
                     "id": "bunScripts",
-                    "name": "Bun Scripts",
-                    "iconPath": "bun.svg"
+                    "name": "Bun Scripts"
                 }
             ]
         }
