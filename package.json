@@ -1,6 +1,15 @@
 {
     "name": "bun-scripts",
     "displayName": "Bun Scripts",
+    "publisher": "yuu1111",
+    "author": {
+        "name": "w0o0o"
+    },
+    "contributors": [
+        {
+            "name": "yuu1111"
+        }
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/yuu1111/bun-scripts.git"

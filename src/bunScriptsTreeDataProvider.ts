@@ -61,10 +61,6 @@ export class BunScriptsTreeDataProvider
 				tooltip: "Run Bun Script",
 				arguments: [name],
 			};
-			item.iconPath = {
-				light: vscode.Uri.file(`${__dirname}/bun.svg`),
-				dark: vscode.Uri.file(`${__dirname}/bun.svg`),
-			};
 			items.push(item);
 		}
 
