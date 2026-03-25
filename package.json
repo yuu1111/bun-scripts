@@ -28,6 +28,32 @@
 					"name": "Bun Scripts"
 				}
 			]
+		},
+		"commands": [
+			{
+				"command": "bunScripts.expandAll",
+				"title": "Expand All",
+				"icon": "$(expand-all)"
+			},
+			{
+				"command": "bunScripts.collapseAll",
+				"title": "Collapse All",
+				"icon": "$(collapse-all)"
+			}
+		],
+		"menus": {
+			"view/title": [
+				{
+					"command": "bunScripts.expandAll",
+					"when": "view == bunScripts",
+					"group": "navigation"
+				},
+				{
+					"command": "bunScripts.collapseAll",
+					"when": "view == bunScripts",
+					"group": "navigation"
+				}
+			]
 		}
 	},
 	"scripts": {

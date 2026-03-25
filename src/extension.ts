@@ -10,8 +10,24 @@ export function activate(context: vscode.ExtensionContext): void {
 
 	const treeView = vscode.window.createTreeView("bunScripts", {
 		treeDataProvider: bunScriptsTreeDataProvider,
-		showCollapseAll: true,
 	});
+
+	const expandAll = vscode.commands.registerCommand(
+		"bunScripts.expandAll",
+		() => {
+			for (const item of bunScriptsTreeDataProvider.getChildren()) {
+				treeView.reveal(item, { expand: 2 });
+			}
+		},
+	);
+
+	const collapseAll = vscode.commands.registerCommand(
+		"bunScripts.collapseAll",
+		() =>
+			vscode.commands.executeCommand(
+				"workbench.actions.treeView.bunScripts.collapseAll",
+			),
+	);
 
 	const runBunScript = vscode.commands.registerCommand(
 		"extension.runBunScript",
@@ -37,5 +53,12 @@ export function activate(context: vscode.ExtensionContext): void {
 		}
 	});
 
-	context.subscriptions.push(treeView, runBunScript, watcher, onSave);
+	context.subscriptions.push(
+		treeView,
+		expandAll,
+		collapseAll,
+		runBunScript,
+		watcher,
+		onSave,
+	);
 }

@@ -139,6 +139,15 @@ export class BunScriptsTreeDataProvider
 	}
 
 	/**
+	 * @description ツリーアイテムの親要素を返す (reveal に必要)
+	 * @param element - 子要素
+	 * @returns 親要素。ルートレベルの場合は undefined
+	 */
+	getParent(_element: BunScriptTreeItem): BunScriptTreeItem | undefined {
+		return undefined;
+	}
+
+	/**
 	 * @description ツリーの子要素を返す
 	 * @param element - 親要素。undefined の場合はルートレベル
 	 * @returns 子ツリーアイテムの配列
