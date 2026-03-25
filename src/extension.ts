@@ -1,20 +1,26 @@
 import * as vscode from "vscode";
 import { BunScriptsTreeDataProvider } from "./bunScriptsTreeDataProvider";
 
+/**
+ * @description 拡張機能のエントリーポイント
+ * @param context - 拡張機能コンテキスト
+ */
 export function activate(context: vscode.ExtensionContext): void {
 	const bunScriptsTreeDataProvider = new BunScriptsTreeDataProvider();
 
-	vscode.window.registerTreeDataProvider(
-		"bunScripts",
-		bunScriptsTreeDataProvider,
-	);
+	const treeView = vscode.window.createTreeView("bunScripts", {
+		treeDataProvider: bunScriptsTreeDataProvider,
+		showCollapseAll: true,
+	});
 
 	const runBunScript = vscode.commands.registerCommand(
 		"extension.runBunScript",
-		(script: string) => {
+		(script: string, cwd?: string) => {
 			vscode.window.showInformationMessage(`Running Bun Script: ${script}`);
 
-			const terminal = vscode.window.createTerminal();
+			const terminal = vscode.window.createTerminal(
+				cwd ? { name: `Bun: ${script}`, cwd } : { name: `Bun: ${script}` },
+			);
 			terminal.show();
 			terminal.sendText(`bun run ${script}`);
 		},
@@ -31,5 +37,5 @@ export function activate(context: vscode.ExtensionContext): void {
 		}
 	});
 
-	context.subscriptions.push(runBunScript, watcher, onSave);
+	context.subscriptions.push(treeView, runBunScript, watcher, onSave);
 }
