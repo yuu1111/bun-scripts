@@ -2,9 +2,9 @@
 	"extends": "@yuu1111/tsconfig/base.json",
 	"compilerOptions": {
 		"outDir": "dist",
-		"rootDir": "src",
+		"rootDir": ".",
 		"types": ["node", "vscode"]
 	},
-	"include": ["src"],
+	"include": ["src", "scripts"],
 	"exclude": ["node_modules", "dist"]
 }
