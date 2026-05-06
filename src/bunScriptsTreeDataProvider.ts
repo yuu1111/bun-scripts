@@ -85,6 +85,32 @@ function resolveWorkspaceGlobs(
 }
 
 /**
+ * @description パッケージディレクトリを表すフォルダアイテムを生成する
+ * @param dir - パッケージディレクトリの絶対パス
+ * @param rootPath - ワークスペースルートの絶対パス
+ * @param pkg - パース済み package.json
+ * @returns Collapsed 状態のフォルダアイテム
+ */
+function createFolderItem(
+	dir: string,
+	rootPath: string,
+	pkg: Record<string, unknown>,
+): BunScriptTreeItem {
+	const name = pkg.name as string | undefined;
+	const label =
+		dir === rootPath
+			? (name ?? "(root)")
+			: path.relative(rootPath, dir).replace(/\\/g, "/");
+	const item = new BunScriptTreeItem(
+		label,
+		vscode.TreeItemCollapsibleState.Collapsed,
+	);
+	item.workspacePath = dir;
+	item.tooltip = name ?? label;
+	return item;
+}
+
+/**
  * @description スクリプトアイテムの配列を生成する
  * @param scripts - スクリプト名とコマンドのマップ
  * @param cwd - スクリプト実行時の作業ディレクトリ
@@ -152,9 +178,7 @@ export class BunScriptsTreeDataProvider
 	 * @param element - 親要素。undefined の場合はルートレベル
 	 * @returns 子ツリーアイテムの配列
 	 */
-	async getChildren(
-		element?: BunScriptTreeItem,
-	): Promise<BunScriptTreeItem[]> {
+	async getChildren(element?: BunScriptTreeItem): Promise<BunScriptTreeItem[]> {
 		if (element?.workspacePath) {
 			const pkg = readPackageJson(element.workspacePath);
 			const scripts = pkg?.scripts as Record<string, string> | undefined;
@@ -169,29 +193,10 @@ export class BunScriptsTreeDataProvider
 		const workspaces = rootPkg ? extractWorkspaces(rootPkg) : undefined;
 
 		if (rootPkg && workspaces) {
-			const items: BunScriptTreeItem[] = [];
-
-			const rootName = (rootPkg.name as string | undefined) ?? "(root)";
-			const rootItem = new BunScriptTreeItem(
-				rootName,
-				vscode.TreeItemCollapsibleState.Collapsed,
-			);
-			rootItem.workspacePath = rootPath;
-			rootItem.tooltip = rootName;
-			items.push(rootItem);
-
-			const wsPkgs = resolveWorkspaceGlobs(rootPath, workspaces);
-			for (const { dir, pkg } of wsPkgs) {
-				const label = path.relative(rootPath, dir).replace(/\\/g, "/");
-				const item = new BunScriptTreeItem(
-					label,
-					vscode.TreeItemCollapsibleState.Collapsed,
-				);
-				item.workspacePath = dir;
-				item.tooltip = (pkg.name as string | undefined) ?? label;
-				items.push(item);
+			const items = [createFolderItem(rootPath, rootPath, rootPkg)];
+			for (const { dir, pkg } of resolveWorkspaceGlobs(rootPath, workspaces)) {
+				items.push(createFolderItem(dir, rootPath, pkg));
 			}
-
 			return items;
 		}
 
@@ -203,7 +208,7 @@ export class BunScriptsTreeDataProvider
 			.map((u) => path.dirname(u.fsPath))
 			.sort((a, b) => a.length - b.length);
 
-		// ルート package.json のみが存在する場合は従来どおり scripts を直接展開
+		// 単一パッケージは従来どおりフォルダ階層なしで scripts を直接表示
 		if (rootPkg && dirs.length === 1 && dirs[0] === rootPath) {
 			const scripts = rootPkg.scripts as Record<string, string> | undefined;
 			if (!scripts) return [];
@@ -212,21 +217,11 @@ export class BunScriptsTreeDataProvider
 
 		const items: BunScriptTreeItem[] = [];
 		for (const dir of dirs) {
-			const pkg = readPackageJson(dir);
+			const pkg = dir === rootPath && rootPkg ? rootPkg : readPackageJson(dir);
 			if (!pkg) continue;
 			const scripts = pkg.scripts as Record<string, string> | undefined;
 			if (!scripts || Object.keys(scripts).length === 0) continue;
-			const label =
-				dir === rootPath
-					? ((pkg.name as string | undefined) ?? "(root)")
-					: (path.relative(rootPath, dir).replace(/\\/g, "/") || ".");
-			const item = new BunScriptTreeItem(
-				label,
-				vscode.TreeItemCollapsibleState.Collapsed,
-			);
-			item.workspacePath = dir;
-			item.tooltip = (pkg.name as string | undefined) ?? label;
-			items.push(item);
+			items.push(createFolderItem(dir, rootPath, pkg));
 		}
 
 		return items;
