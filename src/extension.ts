@@ -14,8 +14,9 @@ export function activate(context: vscode.ExtensionContext): void {
 
 	const expandAll = vscode.commands.registerCommand(
 		"bunScripts.expandAll",
-		() => {
-			for (const item of bunScriptsTreeDataProvider.getChildren()) {
+		async () => {
+			const children = await bunScriptsTreeDataProvider.getChildren();
+			for (const item of children) {
 				treeView.reveal(item, { expand: 2 });
 			}
 		},
