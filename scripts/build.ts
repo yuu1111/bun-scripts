@@ -1,8 +1,6 @@
 import { type BuildOptions, build, context } from "esbuild";
 
-const watch = process.argv.includes("--watch");
-
-const options: BuildOptions = {
+export const buildOptions: BuildOptions = {
 	entryPoints: ["./src/extension.ts"],
 	bundle: true,
 	outdir: "dist",
@@ -12,10 +10,16 @@ const options: BuildOptions = {
 	sourcemap: true,
 };
 
-if (watch) {
-	const ctx = await context(options);
-	await ctx.watch();
-	console.log("esbuild: watching for changes...");
-} else {
-	await build(options);
+export async function runBuild(watch = false): Promise<void> {
+	if (watch) {
+		const ctx = await context(buildOptions);
+		await ctx.watch();
+		console.log("esbuild: watching for changes...");
+	} else {
+		await build(buildOptions);
+	}
+}
+
+if (import.meta.main) {
+	await runBuild(process.argv.includes("--watch"));
 }

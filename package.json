@@ -62,7 +62,7 @@
 		"typecheck": "tsc -noEmit",
 		"lint": "biome check .",
 		"format": "biome check --write --unsafe .",
-		"deploy": "bun run build && bunx @vscode/vsce package --no-dependencies && code --install-extension *.vsix --force"
+		"deploy": "bun scripts/deploy.ts"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.14",

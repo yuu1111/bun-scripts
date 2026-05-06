@@ -1,8 +1,14 @@
 .vscode/**
 .vscode-test/**
 src/**
+scripts/**
 .gitignore
+.github/**
 biome.json
 **/tsconfig.json
 **/*.map
 node_modules/**
+bun.lock
+AGENTS.md
+CLAUDE.md
+*.vsix
