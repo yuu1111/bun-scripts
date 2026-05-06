@@ -10,6 +10,7 @@ bun run watch     # esbuild watch モード
 bun run typecheck # tsc -noEmit (型チェックのみ)
 bun run lint      # biome check
 bun run format    # biome check --write --unsafe
+bun run deploy    # scripts/deploy.ts でデプロイ
 ```
 
 パッケージング: `vsce package` で .vsix 生成。デバッグは VS Code の「Run Extension」(F5) で Extension Host 起動。

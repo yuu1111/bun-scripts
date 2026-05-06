@@ -16,7 +16,7 @@
 
 ## 必要条件
 
-- Visual Studio Code `^1.82.0`
+- Visual Studio Code `^1.118.0`
 - [Bun](https://bun.sh/) (スクリプト実行用)
 
 ## 使い方
@@ -47,6 +47,9 @@ VS Code で本リポジトリを開き、`F5` (Run Extension) で Extension Host
 src/
   extension.ts                    # activate エントリポイント、コマンド登録
   bunScriptsTreeDataProvider.ts   # TreeDataProvider 実装、workspaces 解決
+scripts/
+  build.ts                        # esbuild バンドルスクリプト (--watch 対応)
+  deploy.ts                       # vsce package + code --install-extension
 dist/                             # esbuild の出力先
 ```
 
