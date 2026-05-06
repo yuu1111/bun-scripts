@@ -16,8 +16,8 @@ bun run format    # biome check --write --unsafe
 
 # アーキテクチャ
 
-- `src/extension.ts` — `activate()` エントリポイント。TreeDataProvider 登録、`extension.runBunScript` コマンド登録、`package.json` の FileSystemWatcher + onDidSave でツリー自動リフレッシュ
-- `src/bunScriptsTreeDataProvider.ts` — `BunScriptsTreeDataProvider` (TreeDataProvider 実装)。ワークスペースルートの `package.json` を同期的に読み取り、scripts エントリを `BunScriptTreeItem` に変換
+- `src/extension.ts` — `activate()` エントリポイント。TreeView 作成、`extension.runBunScript` / `bunScripts.expandAll` / `bunScripts.collapseAll` コマンド登録、`package.json` の FileSystemWatcher + onDidSave でツリー自動リフレッシュ
+- `src/bunScriptsTreeDataProvider.ts` — `BunScriptsTreeDataProvider` (TreeDataProvider 実装)。ルート `package.json` を同期的に読み、`workspaces` があれば monorepo として各パッケージを折りたたみノードで展開。無い場合は `findFiles` で配下の `package.json` を探索し、scripts エントリを `BunScriptTreeItem` に変換
 - バンドラは esbuild (CJS, Node, vscode external)。TypeScript の型チェックは tsc -noEmit で別途実行
 - Linter/Formatter は Biome (`@yuu1111/biome-config` を extends)
 - tsconfig は `@yuu1111/tsconfig/base.json` を extends
