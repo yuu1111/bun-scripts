@@ -16,7 +16,9 @@ function packageVsix(): void {
 }
 
 function findVsix(): string {
-	const vsix = readdirSync(".").find((f) => f.startsWith("bun-scripts-") && f.endsWith(".vsix"));
+	const vsix = readdirSync(".").find(
+		(f) => f.startsWith("bun-scripts-") && f.endsWith(".vsix"),
+	);
 	if (!vsix) throw new Error("packaged vsix not found");
 	return vsix;
 }

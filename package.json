@@ -20,6 +20,10 @@
 	},
 	"icon": "bun.png",
 	"main": "./dist/extension.js",
+	"activationEvents": [
+		"onView:bunScripts",
+		"workspaceContains:package.json"
+	],
 	"contributes": {
 		"views": {
 			"explorer": [
