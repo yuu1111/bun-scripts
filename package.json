@@ -14,25 +14,34 @@
 		"type": "git",
 		"url": "https://github.com/yuu1111/bun-scripts.git"
 	},
-	"version": "1.2.0",
+	"version": "1.2.2",
 	"engines": {
 		"vscode": "^1.118.0"
 	},
 	"icon": "bun.png",
 	"main": "./dist/extension.js",
 	"activationEvents": [
+		"onStartupFinished",
 		"onView:bunScripts",
-		"workspaceContains:package.json"
+		"workspaceContains:package.json",
+		"workspaceContains:**/package.json"
 	],
 	"contributes": {
 		"views": {
 			"explorer": [
 				{
 					"id": "bunScripts",
-					"name": "Bun Scripts"
+					"name": "Bun Scripts",
+					"visibility": "visible"
 				}
 			]
 		},
+		"viewsWelcome": [
+			{
+				"view": "bunScripts",
+				"contents": "No package.json scripts found in this workspace."
+			}
+		],
 		"commands": [
 			{
 				"command": "bunScripts.expandAll",
