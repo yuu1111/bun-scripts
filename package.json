@@ -22,7 +22,6 @@
 	"main": "./dist/extension.js",
 	"activationEvents": [
 		"onStartupFinished",
-		"onView:bunScripts",
 		"workspaceContains:package.json",
 		"workspaceContains:**/package.json"
 	],
@@ -43,6 +42,10 @@
 			}
 		],
 		"commands": [
+			{
+				"command": "extension.runBunScript",
+				"title": "Run Bun Script"
+			},
 			{
 				"command": "bunScripts.expandAll",
 				"title": "Expand All",
