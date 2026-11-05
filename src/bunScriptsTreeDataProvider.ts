@@ -55,7 +55,7 @@ function resolveWorkspaceGlobs(
 	rootPath: string,
 	patterns: string[],
 ): { dir: string; pkg: Record<string, unknown> }[] {
-	const dirs: string[] = [];
+	const dirs = new Set<string>();
 
 	for (const pattern of patterns) {
 		if (pattern.endsWith("/*")) {
@@ -64,19 +64,20 @@ function resolveWorkspaceGlobs(
 				const entries = fs.readdirSync(parent, { withFileTypes: true });
 				for (const entry of entries) {
 					if (entry.isDirectory()) {
-						dirs.push(path.join(parent, entry.name));
+						dirs.add(path.join(parent, entry.name));
 					}
 				}
 			} catch {}
 		} else {
-			const dir = path.join(rootPath, pattern);
+			const dir = path.resolve(rootPath, pattern);
 			if (fs.existsSync(dir)) {
-				dirs.push(dir);
+				dirs.add(dir);
 			}
 		}
 	}
 
 	const results: { dir: string; pkg: Record<string, unknown> }[] = [];
+	dirs.delete(path.resolve(rootPath));
 	for (const dir of dirs) {
 		const pkg = readPackageJson(dir);
 		if (pkg) results.push({ dir, pkg });
