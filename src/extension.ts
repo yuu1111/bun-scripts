@@ -2,7 +2,8 @@ import * as vscode from "vscode";
 import { BunScriptsTreeDataProvider } from "./bunScriptsTreeDataProvider";
 
 /**
- * @description 拡張機能のエントリーポイント
+ * 拡張機能のエントリーポイント。
+ *
  * @param context - 拡張機能コンテキスト
  */
 export function activate(context: vscode.ExtensionContext): void {

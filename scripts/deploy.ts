@@ -4,7 +4,9 @@ import { runBuild } from "./build";
 
 function cleanVsix(): void {
 	for (const f of readdirSync(".")) {
-		if (f.endsWith(".vsix")) unlinkSync(f);
+		if (f.endsWith(".vsix")) {
+			unlinkSync(f);
+		}
 	}
 }
 
@@ -19,7 +21,9 @@ function findVsix(): string {
 	const vsix = readdirSync(".").find(
 		(f) => f.startsWith("bun-scripts-") && f.endsWith(".vsix"),
 	);
-	if (!vsix) throw new Error("packaged vsix not found");
+	if (!vsix) {
+		throw new Error("packaged vsix not found");
+	}
 	return vsix;
 }
 

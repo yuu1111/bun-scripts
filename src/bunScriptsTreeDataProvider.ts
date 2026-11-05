@@ -3,19 +3,20 @@ import * as path from "node:path";
 import * as vscode from "vscode";
 
 /**
- * @description ワークスペースフォルダまたはスクリプトを表すツリーアイテム
- * @property cwd - スクリプト実行時の作業ディレクトリ (スクリプトアイテムのみ) @optional
- * @property workspacePath - パッケージディレクトリの絶対パス (フォルダアイテムのみ) @optional
+ * ワークスペースフォルダまたはスクリプトを表すツリーアイテム。
  */
 class BunScriptTreeItem extends vscode.TreeItem {
+	/** スクリプト実行時の作業ディレクトリ (スクリプトアイテムのみ) */
 	cwd?: string;
+	/** パッケージディレクトリの絶対パス (フォルダアイテムのみ) */
 	workspacePath?: string;
 }
 
 /**
- * @description package.json を読み取ってパースする
+ * package.json を読み取ってパースする。
+ *
  * @param pkgDir - package.json が存在するディレクトリの絶対パス
- * @returns パースされたオブジェクト、失敗時は undefined
+ * @returns パースされたオブジェクト。失敗時は `undefined`
  */
 function readPackageJson(pkgDir: string): Record<string, unknown> | undefined {
 	try {
@@ -27,14 +28,16 @@ function readPackageJson(pkgDir: string): Record<string, unknown> | undefined {
 }
 
 /**
- * @description package.json から workspaces パターン配列を抽出する
+ * package.json から workspaces パターン配列を抽出する。
+ *
  * @param pkg - パースされた package.json オブジェクト
- * @returns workspaces パターン配列、存在しない場合は undefined
+ * @returns workspaces パターン配列。存在しない場合は `undefined`
  */
 function extractWorkspaces(pkg: Record<string, unknown>): string[] | undefined {
 	const ws = pkg.workspaces;
-	if (Array.isArray(ws)) return ws;
-	// Yarn 互換: { packages: [...] } 形式
+	if (Array.isArray(ws)) {
+		return ws;
+	}
 	if (
 		ws &&
 		typeof ws === "object" &&
@@ -46,7 +49,8 @@ function extractWorkspaces(pkg: Record<string, unknown>): string[] | undefined {
 }
 
 /**
- * @description workspaces のグロブパターンをディレクトリ一覧に展開する
+ * workspaces のグロブパターンをディレクトリ一覧に展開する。
+ *
  * @param rootPath - ワークスペースルートの絶対パス
  * @param patterns - workspaces フィールドのパターン配列
  * @returns パッケージディレクトリのパスとパース済み package.json のペア配列
@@ -80,17 +84,20 @@ function resolveWorkspaceGlobs(
 	dirs.delete(path.resolve(rootPath));
 	for (const dir of dirs) {
 		const pkg = readPackageJson(dir);
-		if (pkg) results.push({ dir, pkg });
+		if (pkg) {
+			results.push({ dir, pkg });
+		}
 	}
 	return results;
 }
 
 /**
- * @description パッケージディレクトリを表すフォルダアイテムを生成する
+ * パッケージディレクトリを表すフォルダアイテムを生成する。
+ *
  * @param dir - パッケージディレクトリの絶対パス
  * @param rootPath - ワークスペースルートの絶対パス
  * @param pkg - パース済み package.json
- * @returns Collapsed 状態のフォルダアイテム
+ * @returns `Collapsed` 状態のフォルダアイテム
  */
 function createFolderItem(
 	dir: string,
@@ -112,7 +119,8 @@ function createFolderItem(
 }
 
 /**
- * @description スクリプトアイテムの配列を生成する
+ * スクリプトアイテムの配列を生成する。
+ *
  * @param scripts - スクリプト名とコマンドのマップ
  * @param cwd - スクリプト実行時の作業ディレクトリ
  * @returns スクリプトツリーアイテムの配列
@@ -139,7 +147,7 @@ function createScriptItems(
 }
 
 /**
- * @description Bun Scripts ツリービューのデータプロバイダー
+ * Bun Scripts ツリービューのデータプロバイダー。
  */
 export class BunScriptsTreeDataProvider
 	implements vscode.TreeDataProvider<BunScriptTreeItem>
@@ -150,14 +158,15 @@ export class BunScriptsTreeDataProvider
 	readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
 	/**
-	 * @description ツリーデータの変更を通知してビューを更新する
+	 * ツリーデータの変更を通知してビューを更新する。
 	 */
 	refresh(): void {
 		this._onDidChangeTreeData.fire(undefined);
 	}
 
 	/**
-	 * @description ツリーアイテムのビュー表現を返す
+	 * ツリーアイテムのビュー表現を返す。
+	 *
 	 * @param element - ツリーアイテム
 	 * @returns そのままのツリーアイテム
 	 */
@@ -166,29 +175,38 @@ export class BunScriptsTreeDataProvider
 	}
 
 	/**
-	 * @description ツリーアイテムの親要素を返す (reveal に必要)
-	 * @param element - 子要素
-	 * @returns 親要素。ルートレベルの場合は undefined
+	 * ツリーアイテムの親要素を返す。
+	 *
+	 * @remarks
+	 * {@link vscode.TreeView.reveal} の呼び出しに必要。
+	 *
+	 * @param _element - 子要素
+	 * @returns 親要素。ルートレベルの場合は `undefined`
 	 */
 	getParent(_element: BunScriptTreeItem): BunScriptTreeItem | undefined {
 		return undefined;
 	}
 
 	/**
-	 * @description ツリーの子要素を返す
-	 * @param element - 親要素。undefined の場合はルートレベル
+	 * ツリーの子要素を返す。
+	 *
+	 * @param element - 親要素。`undefined` の場合はルートレベル
 	 * @returns 子ツリーアイテムの配列
 	 */
 	async getChildren(element?: BunScriptTreeItem): Promise<BunScriptTreeItem[]> {
 		if (element?.workspacePath) {
 			const pkg = readPackageJson(element.workspacePath);
 			const scripts = pkg?.scripts as Record<string, string> | undefined;
-			if (!scripts) return [];
+			if (!scripts) {
+				return [];
+			}
 			return createScriptItems(scripts, element.workspacePath);
 		}
 
 		const rootPath = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
-		if (!rootPath) return [];
+		if (!rootPath) {
+			return [];
+		}
 
 		const rootPkg = readPackageJson(rootPath);
 		const workspaces = rootPkg ? extractWorkspaces(rootPkg) : undefined;
@@ -212,16 +230,22 @@ export class BunScriptsTreeDataProvider
 		// 単一パッケージは従来どおりフォルダ階層なしで scripts を直接表示
 		if (rootPkg && dirs.length === 1 && dirs[0] === rootPath) {
 			const scripts = rootPkg.scripts as Record<string, string> | undefined;
-			if (!scripts) return [];
+			if (!scripts) {
+				return [];
+			}
 			return createScriptItems(scripts, rootPath);
 		}
 
 		const items: BunScriptTreeItem[] = [];
 		for (const dir of dirs) {
 			const pkg = dir === rootPath && rootPkg ? rootPkg : readPackageJson(dir);
-			if (!pkg) continue;
+			if (!pkg) {
+				continue;
+			}
 			const scripts = pkg.scripts as Record<string, string> | undefined;
-			if (!scripts || Object.keys(scripts).length === 0) continue;
+			if (!scripts || Object.keys(scripts).length === 0) {
+				continue;
+			}
 			items.push(createFolderItem(dir, rootPath, pkg));
 		}
 
